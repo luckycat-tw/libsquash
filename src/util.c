@@ -48,6 +48,7 @@ sqfs_err sqfs_open_image(sqfs *fs, const uint8_t *image, size_t offset) {
 		return err;
 
 	err = sqfs_init(fs, fd, offset);
+#if 0
 	switch (err) {
 		case SQFS_OK:
 			break;
@@ -76,6 +77,7 @@ sqfs_err sqfs_open_image(sqfs *fs, const uint8_t *image, size_t offset) {
 			fprintf(stderr, "Something went wrong trying to read the squashfs "
 				"image.\n");
 	}
+#endif
 
 	if (err)
 		sqfs_fd_close(fd);
