@@ -26,7 +26,6 @@
 #include "squash/squashfs_fs.h"
 
 #include <zlib.h>
-#include <assert.h>
 
 static sqfs_err sqfs_decompressor_zlib(void *in, size_t insz,
 		void *out, size_t *outsz) {
@@ -39,6 +38,9 @@ static sqfs_err sqfs_decompressor_zlib(void *in, size_t insz,
 }
 
 sqfs_decompressor sqfs_decompressor_get(sqfs_compression_type type) {
-	assert(ZLIB_COMPRESSION == type);
-	return &sqfs_decompressor_zlib;
+	if (ZLIB_COMPRESSION == type)
+	{
+		return &sqfs_decompressor_zlib;
+	}
+	return NULL;
 }

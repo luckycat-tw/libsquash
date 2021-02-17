@@ -79,7 +79,11 @@ int squash_closedir(SQUASH_DIR *dirp)
 {
 	int ret;
 
-	assert(-1 != dirp->fd);
+	if (-1 == dirp->fd)
+	{
+		errno = EBADF;
+		return -1;
+	}
 	free(dirp->entries);
 	free(dirp->filename);
 	if (dirp->payload) {

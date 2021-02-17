@@ -145,7 +145,12 @@ int squash_close(int vfd)
                 }
                 squash_global_fdtable.end = vfd + 1;
         } else {
-                assert(squash_global_fdtable.end > vfd + 1);
+        	if (!(squash_global_fdtable.end > vfd + 1))
+        	{
+        		MUTEX_UNLOCK(&squash_global_mutex);
+        		errno = EBADF;
+        		return -1;
+        	}
         }
         MUTEX_UNLOCK(&squash_global_mutex);
         return 0;
@@ -196,7 +201,11 @@ off_t squash_lseek(int vfd, off_t offset, int whence)
 	}
 	else if (SQUASH_SEEK_END == whence)
 	{
-		assert(S_ISREG(file->node.base.mode));
+		if (!(S_ISREG(file->node.base.mode)))
+		{
+			errno = EBADF;
+			return -1;
+		}
 		file->pos = file->node.xtra.reg.file_size;
 	}
 	return file->pos;

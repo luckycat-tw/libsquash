@@ -451,7 +451,11 @@ sqfs_err sqfs_lookup_path_inner(sqfs *fs, sqfs_inode *inode, const char *incomin
 		if (!*path) {
 			is_last_component = 1;
 		} else if (path0 + strlen(path0) - 1 == path) {
-			assert('/' == *path);
+			if ('/' != *path)
+			{
+				ret = SQFS_ERR;
+				goto exit;
+			}
 			is_last_component = 1;
 		} else {
 			is_last_component = 0;
