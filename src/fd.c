@@ -202,7 +202,7 @@ off_t squash_lseek(int vfd, off_t offset, int whence)
 	return file->pos;
 }
 
-static void squash_halt()
+void squash_halt()
 {
 	if (squash_global_fdtable.fds) {
 		free(squash_global_fdtable.fds);
@@ -212,16 +212,21 @@ static void squash_halt()
 
 sqfs_err squash_start()
 {
+#if 0
 	int ret;
+#endif
 	squash_global_fdtable.nr = 0;
 	squash_global_fdtable.fds = NULL;
 	MUTEX_INIT(&squash_global_mutex);
+#if 0
 	ret = atexit(squash_halt);
 	if (0 == ret) {
 		return SQFS_OK;
 	} else {
 		return SQFS_ERR;
 	}
+#endif
+	return SQFS_OK;
 }
 
 struct squash_file * squash_find_entry(void *ptr)
