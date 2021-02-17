@@ -208,7 +208,6 @@ static void squash_halt()
 		free(squash_global_fdtable.fds);
 	}
 	MUTEX_DESTORY(&squash_global_mutex);
-	squash_extract_clear_cache();
 }
 
 sqfs_err squash_start()

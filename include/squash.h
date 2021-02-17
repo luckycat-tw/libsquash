@@ -222,23 +222,4 @@ int squash_scandir(sqfs *fs, const char *dirname, struct SQUASH_DIRENT ***nameli
 	int (*select)(const struct SQUASH_DIRENT *),
 	int (*compar)(const struct SQUASH_DIRENT **, const struct SQUASH_DIRENT **));
 
-/*
- * Extracts the file `path` from `fs` to a temporary file
- * inside the temporary folder.
- * Upon successful completion the path of the extracted temporary file
- * is returned.
- * Otherwise, a value of `NULL` is returned
- * and `errno` is set to the reason of the error.
- * The returned path is referenced by an internal cache and must not be freed.
- */
-#ifdef _WIN32
-#define SQUASH_OS_PATH const wchar_t*
-#else
-#define SQUASH_OS_PATH const char*
-#endif
-SQUASH_OS_PATH squash_tmpdir();
-SQUASH_OS_PATH squash_tmpf(SQUASH_OS_PATH tmpdir, const char *ext_name);
-SQUASH_OS_PATH squash_extract(sqfs *fs, const char *path, const char *ext_name);
-void squash_extract_clear_cache();
-
 #endif
