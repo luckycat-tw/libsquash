@@ -30,12 +30,12 @@
 #include <stdio.h>
 
 /* Open a file, and optionally print a message on failure */
-sqfs_err sqfs_fd_open(const uint8_t *path, sqfs_fd_t *fd);
+sqfs_err sqfs_fd_open(sqfs_fd_t path, sqfs_fd_t *fd);
 
 /* Close a file */
 void sqfs_fd_close(sqfs_fd_t fd);
 
 /* Open a filesystem and print errors to stderr. */
-sqfs_err sqfs_open_image(sqfs *fs, const uint8_t *image, size_t offset);
+sqfs_err sqfs_open_image(sqfs *fs, sqfs_fd_t image, size_t offset);
 
 #endif

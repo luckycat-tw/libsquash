@@ -25,25 +25,33 @@
 #include "squash/table.h"
 
 #include "squash/fs.h"
+#include "squash/nonstd.h"
 
 #include <string.h>
 
 sqfs_err sqfs_table_init(sqfs_table *table, sqfs_fd_t fd, sqfs_off_t start, size_t each,
 		size_t count) {
-	//size_t nblocks, bread;
+	size_t i;
+	size_t nblocks, bread;
 	
 	if (count == 0)
 		return SQFS_OK;
 	
-	//nblocks = sqfs_divceil(each * count, SQUASHFS_METADATA_SIZE);
-
-	//unused
-	//bread = nblocks * sizeof(uint64_t);
-
+	nblocks = sqfs_divceil(each * count, SQUASHFS_METADATA_SIZE);
+	bread = nblocks * sizeof(uint64_t);
+	
 	table->each = each;
-	table->blocks = (uint64_t *)(fd + start);
+	if (!(table->blocks = malloc(bread)))
+		goto err;
+	if (sqfs_pread(fd, table->blocks, bread, start) != bread)
+		goto err;
 	
 	return SQFS_OK;
+	
+err:
+	free(table->blocks);
+	table->blocks = NULL;
+	return SQFS_ERR;
 }
 
 void sqfs_table_destroy(sqfs_table *table) {

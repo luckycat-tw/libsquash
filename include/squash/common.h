@@ -48,7 +48,7 @@
 	typedef off_t sqfs_off_t;
         #define SQUASH_DIRENT dirent
 #endif
-typedef const uint8_t * sqfs_fd_t;
+typedef IStream * sqfs_fd_t;
 
 typedef enum {
 	SQFS_OK,
@@ -69,7 +69,6 @@ typedef struct sqfs_inode sqfs_inode;
 typedef struct {
 	size_t size;
 	void *data;
-	short data_need_freeing;
 } sqfs_block;
 
 typedef struct {

@@ -36,7 +36,7 @@
 struct sqfs {
 	sqfs_fd_t fd;
 	size_t offset;
-	struct squashfs_super_block *sb;
+	struct squashfs_super_block sb;
 	sqfs_table id_table;
 	sqfs_table frag_table;
 	sqfs_table export_table;

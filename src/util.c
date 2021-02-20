@@ -28,7 +28,7 @@
 
 #include <stdio.h>
 
-sqfs_err sqfs_fd_open(const uint8_t *path, sqfs_fd_t *fd) {
+sqfs_err sqfs_fd_open(sqfs_fd_t path, sqfs_fd_t *fd) {
 	*fd = path;
 	return SQFS_OK;
 }
@@ -40,7 +40,7 @@ void sqfs_fd_close(sqfs_fd_t fd) {
 
 /* TODO: WIN32 implementation of open/close */
 /* TODO: i18n of error messages */
-sqfs_err sqfs_open_image(sqfs *fs, const uint8_t *image, size_t offset) {
+sqfs_err sqfs_open_image(sqfs *fs, sqfs_fd_t image, size_t offset) {
 	sqfs_err err;
 	sqfs_fd_t fd;
 

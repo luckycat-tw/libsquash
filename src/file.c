@@ -58,13 +58,13 @@ sqfs_err sqfs_frag_block(sqfs *fs, sqfs_inode *inode,
 		return SQFS_ERR;
 	
 	*offset = inode->xtra.reg.frag_off;
-	*size = inode->xtra.reg.file_size % fs->sb->block_size;
+	*size = inode->xtra.reg.file_size % fs->sb.block_size;
 	return SQFS_OK;
 }
 
 size_t sqfs_blocklist_count(sqfs *fs, sqfs_inode *inode) {
 	uint64_t size = inode->xtra.reg.file_size;
-	size_t block = fs->sb->block_size;
+	size_t block = fs->sb.block_size;
 	if (inode->xtra.reg.frag_idx == SQUASHFS_INVALID_FRAG) {
 		return sqfs_divceil(size, block);
 	} else {
@@ -99,7 +99,7 @@ sqfs_err sqfs_blocklist_next(sqfs_blocklist *bl) {
 	sqfs_data_header(bl->header, &compressed, &bl->input_size);
 	
 	if (bl->started)
-		bl->pos += bl->fs->sb->block_size;
+		bl->pos += bl->fs->sb.block_size;
 	bl->started = 1;
 	
 	return SQFS_OK;
@@ -120,7 +120,7 @@ sqfs_err sqfs_read_range(sqfs *fs, sqfs_inode *inode, sqfs_off_t start,
 		return SQFS_ERR;
 	
 	file_size = inode->xtra.reg.file_size;
-	block_size = fs->sb->block_size;
+	block_size = fs->sb.block_size;
 	
 	if (*size < 0 || start > file_size)
 		return SQFS_ERR;
@@ -255,7 +255,7 @@ static sqfs_err sqfs_blockidx_add(sqfs *fs, sqfs_inode *inode,
 		 * inode->next.offset */
 		if (bl.cur.offset < sizeof(sqfs_blocklist_entry) && !first) {
 			blockidx[i].data_block = bl.block + bl.input_size;
-			blockidx[i++].md_block = (uint32_t)(bl.cur.block - fs->sb->inode_table_start);
+			blockidx[i++].md_block = (uint32_t)(bl.cur.block - fs->sb.inode_table_start);
 		}
 		first = 0;
 		
@@ -281,7 +281,7 @@ sqfs_err sqfs_blockidx_blocklist(sqfs *fs, sqfs_inode *inode, sqfs_blocklist *bl
 	MUTEX_LOCK(&fs->blockidx.mutex);
 
 	sqfs_blocklist_init(fs, inode, bl);
-	block = (size_t)(start / fs->sb->block_size);
+	block = (size_t)(start / fs->sb.block_size);
 	if (block > bl->remain) { /* fragment */
 		bl->remain = 0;
 		ret = SQFS_OK;
@@ -315,10 +315,10 @@ sqfs_err sqfs_blockidx_blocklist(sqfs *fs, sqfs_inode *inode, sqfs_blocklist *bl
 		- (bl->cur.offset / sizeof(sqfs_blocklist_entry));
 	
 	blockidx += metablock - 1;
-	bl->cur.block = blockidx->md_block + fs->sb->inode_table_start;
+	bl->cur.block = blockidx->md_block + fs->sb.inode_table_start;
 	bl->cur.offset %= sizeof(sqfs_blocklist_entry);
 	bl->remain -= skipped;
-	bl->pos = (uint64_t)skipped * fs->sb->block_size;
+	bl->pos = (uint64_t)skipped * fs->sb.block_size;
 	bl->block = blockidx->data_block;
 	ret = SQFS_OK;
 

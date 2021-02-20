@@ -61,7 +61,7 @@ sqfs_err sqfs_dir_open(sqfs *fs, sqfs_inode *inode, sqfs_dir *dir,
 
 	memset(dir, 0, sizeof(*dir));
 	dir->cur.block = inode->xtra.dir.start_block +
-		fs->sb->directory_table_start;
+		fs->sb.directory_table_start;
 	dir->cur.offset = inode->xtra.dir.offset;
 	dir->offset = 0;
 	dir->total = inode->xtra.dir.dir_size - 3;
@@ -179,7 +179,7 @@ static sqfs_err sqfs_dir_ff_header(sqfs *fs, sqfs_inode *inode,
 		if (stop)
 			break;
 		
-		dir->cur.block = idx.start_block + fs->sb->directory_table_start;
+		dir->cur.block = idx.start_block + fs->sb.directory_table_start;
 		dir->offset = idx.index;
 	}
 
